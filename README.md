@@ -54,7 +54,7 @@ Manjaro in Arch Way - гайд по установке Manjaro Linux через 
 Больше информации о вариантах выбора зеркал можно почитать на [Manjaro Wiki](https://wiki.manjaro.org/index.php/Pacman-mirrors)  
 
 #### УСТАНОВКА ОСНОВНЫХ ПАКЕТОВ
-`basestrap /mnt linux-firmware` установка базовых пакетов  
+`basestrap /mnt base linux-firmware` установка базовых пакетов  
 
 #### КОНФИГУРАЦИЯ СИСТЕМЫ
 `fstabgen -U /mnt >> /mnt/etc/fstab` генерация fstab с идентификацией по UUID  
