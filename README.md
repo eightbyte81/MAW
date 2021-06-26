@@ -108,7 +108,7 @@ Manjaro in Arch Way - гайд по установке Manjaro Linux через 
 `%wheel ALL=(ALL) ALL`  
 
 #### УСТАНОВКА KDE PLASMA
-`pacman -S xorg-server plasma-desktop sddm` установка xorg-server и минимального набора plasma  
+`pacman -S xorg-server plasma-desktop sddm-kcm` установка xorg-server и минимального набора plasma  
   
 Для полного набора KDE Plasma, а также ее приложений, на странице установленных пакетов Manjaro KDE (ссылка в TIPS & TRICKS) нужно установить пакеты из пунктов Plasma5 и KDE Applications  
 Если Вас не сильно волнует "засоренность" вашей системы, то можно выполнить следующую команду, которая установит все нужные пакеты для KDE Plasma и KDE Applications:  
