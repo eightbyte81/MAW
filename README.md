@@ -119,8 +119,7 @@ Manjaro in Arch Way - гайд по установке Manjaro Linux через 
 
 #### УСТАНОВКА GNOME
 `pacman -S xorg-server gnome` установка xorg-server и gnome  
-`systemctl start gdm.service` запуск gdm  
-`systemctl enable gdm.service` включение gdm по умолчанию  
+`systemctl enable gdm.service` включение gdm  
 `systemctl enable NetworkManager.service` включение NetworkManager  
 
 ### ЗАВЕРШЕНИЕ УСТАНОВКИ
