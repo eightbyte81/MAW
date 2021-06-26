@@ -135,6 +135,6 @@ Manjaro in Arch Way - гайд по установке Manjaro Linux через 
 Если при разметке в качестве файловой системы была выбрана btrfs, то, при надобности, subvolume придется создавать самому, следуя [данной статье](https://wiki.archlinux.org/title/Btrfs#Subvolumes)  
 
 Различные детали, связанные с установкой и не только, можно уточнить на [ArchWiki](https://wiki.archlinux.org/)  
-
+  
 ---
 Created by @eightbyte81
