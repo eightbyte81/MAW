@@ -54,14 +54,13 @@ Manjaro in Arch Way - гайд по установке Manjaro Linux через 
 Больше информации о вариантах выбора зеркал можно почитать на [Manjaro Wiki](https://wiki.manjaro.org/index.php/Pacman-mirrors)  
 
 #### УСТАНОВКА ОСНОВНЫХ ПАКЕТОВ
-`basestrap /mnt base linux-firmware` установка базовых пакетов  
+`basestrap /mnt base linux510 mhwd linux-firmware nano` установка базовых пакетов  
 
 #### КОНФИГУРАЦИЯ СИСТЕМЫ
 `fstabgen -U /mnt >> /mnt/etc/fstab` генерация fstab с идентификацией по UUID  
-`manjaro-chroot /mnt` смена root на новую систему  
-`mhwd-kernel -i linux510` установка ядра (пример с версией 5.10)  
+`manjaro-chroot /mnt /bin/bash` смена root на новую систему  
 `mhwd -i pci video-nvidia` установка драйвера (ТОЛЬКО ЕСЛИ ВИДЕОКАРТА ОТ NVIDIA)  
-`timedatectl set-timezone Europe/Moscow` установка часового пояса (пример с Москвой)  
+`ln -sf /usr/share/zoneinfo/Europe/Moscow /etc/localtime` установка часового пояса (пример с Москвой)  
 
 #### ЛОКАЛИЗАЦИЯ
 Для установки локализации надо зайти в `/etc/locale.gen` и раскомментировать нужные локали  
@@ -103,7 +102,7 @@ Manjaro in Arch Way - гайд по установке Manjaro Linux через 
 `useradd -m username` создание пользователя username  
 `usermod -a -G wheel username` добавление username в группу wheel  
 `passwd username` установка пароля для username  
-`pacman -S sudo nano` установка sudo и редактора nano (если его не было ранее)  
+`pacman -S sudo` установка sudo и редактора nano (если его не было ранее)  
 `EDITOR=nano visudo` редактирование параметров sudo  
 Далее требуется раскомментировать строку, связанную с группой wheel:  
 `%wheel ALL=(ALL) ALL`  
