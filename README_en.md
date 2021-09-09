@@ -1,18 +1,18 @@
 # MAW
-Manjaro in Arch Way - гайд по установке Manjaro Linux через CLI
+Manjaro in Arch Way - Manjaro Linux installation guide through CLI
 ---
-### ПЕРВОНАЧАЛЬНАЯ ЗАГРУЗКА
-Скачиваем образ [Manjaro Linux](https://manjaro.org/download/)  
-Входим в live режим, подключаемся к интернету и открываем Konsole  
-`sudo su` входим в root  
-`timedatectl set-ntp true` проверка точности системных часов  
-`timedatectl status` проверка статуса сервиса  
+### INITIAL DOWNLOAD
+Download the [Manjaro Linux image](https://manjaro.org/download/)  
+Enter the live system, connect to the internet and open Konsole  
+`sudo su` enter the root  
+`timedatectl set-ntp true` checking the accuracy of the system clock  
+`timedatectl status` checking the service status  
 
-### РАЗМЕТКА ДИСКА
-`fdisk -l` для идентификации всех дисков  
-`fdisk *ваш диск*` разметка (пример - `fdisk /dev/sda`)  
+### DISK PARTITIONING
+`fdisk -l` to identify all drives  
+`fdisk *your drive*` partitioning (example - `fdisk /dev/sda`)  
 
-Примеры разметки из [Arch Wiki](https://wiki.archlinux.org/title/Installation_guide#Example_layouts):  
+Partitioning examples from [Arch Wiki](https://wiki.archlinux.org/title/Installation_guide#Example_layouts):  
 >##### BIOS with MBR:
 >| Mount Point | Partition 		| Partition Type | Suggested size 	   |
 >|-------------|-------------------------|----------------|-------------------------|
@@ -25,116 +25,116 @@ Manjaro in Arch Way - гайд по установке Manjaro Linux через 
 >|`[SWAP]`  		  | `/dev/swap_partition`     |   Linux swap        |More than 512 MiB|
 >|`/mnt`    		  | `/dev/root_partition`     |Linux x86-64 root (/)| Remainder of the device|
 
-Автоматическая разметка Manjaro Linux для UEFI систем размечает следующим образом:
+Manjaro Linux automatic partitioning for UEFI systems:
 | Mount Point | Partition 		| Partition Type | Suggested size	           |
 |-------------|-------------------------|----------------|---------------------------------|
 |`/mnt/boot/efi`| `/dev/efi_system_partition`|EFI system partition |300 MiB                |
 |`[SWAP]`       | `/dev/swap_partition`      |Linux swap           |More than 512 MiB      |
 |`/mnt`         | `/dev/root_partition`      |Linux x86-64 root (/)|Remainder of the device|
 
-### ФОРМАТИРОВАНИЕ РАЗДЕЛОВ
-`lsblk` вывод списка всех созданных разделов  
-`mkfs.ext4 /dev/root_partition` форматирование корневого раздела под ext4  
-Также можно использовать другую файловую систему (например, btrfs) и указать имя раздела, пример: `mkfs.btrfs -L "Root" /dev/root_partition`  
-`mkfs.fat -F32 /dev/efi_system_partition` форматирование efi раздела под fat32  
-`mkswap /dev/swap_partition` форматирование swap раздела  
+### FORMATTING PARTITIONS
+`lsblk` listing all created partitions  
+`mkfs.ext4 /dev/root_partition` formatting root partition with ext4  
+You can also use a different file system (for example, btrfs) and set partition name, for example: `mkfs.btrfs -L "Root" /dev/root_partition`  
+`mkfs.fat -F32 /dev/efi_system_partition` formatting efi partition with fat32  
+`mkswap /dev/swap_partition` formatting swap partition  
 
-### МОНТИРОВАНИЕ ФАЙЛОВЫХ СИСТЕМ
-`mount /dev/root_partition /mnt` монтирование корневого раздела  
-`swapon /dev/swap_partition` включение swap раздела  
+### MOUNTING FILESYSTEMS
+`mount /dev/root_partition /mnt` mounting root partition  
+`swapon /dev/swap_partition` enabling swap partition  
 `mkdir -p /mnt/boot/efi`  
-`mount /dev/efi_system_partition /mnt/boot/efi` монтирование efi раздела  
-Также с помощью `lsblk` можно проверить правильность ранее выполненных действий  
+`mount /dev/efi_system_partition /mnt/boot/efi` mounting efi partition  
+Also, using `lsblk`, you can check the correctness of the previously performed actions  
 
-### УСТАНОВКА
-#### ВЫБОР ЗЕРКАЛ
-Для загрузки с более быстрых зеркал стоит использовать утилиту `pacman-mirrors`  
-Пример выбора самых быстрых зеркал по протоколу https:  
+### INSTALLATION
+#### MIRRORS CHOOSING
+To download from faster mirrors, use the `pacman-mirrors` utility  
+An example of choosing the fastest mirrors using the https protocol:  
 `pacman-mirrors --fasttrack --api --protocol https && pacman -Syyu`  
-Больше информации о вариантах выбора зеркал можно почитать на [Manjaro Wiki](https://wiki.manjaro.org/index.php/Pacman-mirrors)  
+You can read more about the options for choosing mirrors on the [Manjaro Wiki](https://wiki.manjaro.org/index.php/Pacman-mirrors)  
 
-#### УСТАНОВКА ОСНОВНЫХ ПАКЕТОВ
-`basestrap /mnt base linux510 mhwd linux-firmware nano` установка базовых пакетов  
+#### INSTALLING BASIC PACKAGES
+`basestrap /mnt base linux510 mhwd linux-firmware nano` installing basic packages  
 
-#### КОНФИГУРАЦИЯ СИСТЕМЫ
-`fstabgen -U /mnt >> /mnt/etc/fstab` генерация fstab с идентификацией по UUID  
-`manjaro-chroot /mnt /bin/bash` смена root на новую систему  
-`mhwd -i pci video-nvidia` установка драйвера (ТОЛЬКО ЕСЛИ ВИДЕОКАРТА ОТ NVIDIA)  
-`ln -sf /usr/share/zoneinfo/Europe/Moscow /etc/localtime` установка часового пояса (пример с Москвой)  
+#### SYSTEM CONFIGURATION
+`fstabgen -U /mnt >> /mnt/etc/fstab` fstab generation with UUID identification  
+`manjaro-chroot /mnt /bin/bash` changing root to a new system  
+`mhwd -i pci video-nvidia` driver installation (ONLY FOR NVIDIA CARDS)  
+`ln -sf /usr/share/zoneinfo/Europe/Moscow /etc/localtime` setting the time zone (example with Moscow)  
 
-#### ЛОКАЛИЗАЦИЯ
-Для установки локализации надо зайти в `/etc/locale.gen` и раскомментировать нужные локали  
+#### LOCALIZATION
+To install localization, go to `/etc/locale.gen` and uncomment the required locales  
 `nano /etc/locale.gen`  
-Для установки английской и русской локализации надо раскомментировать следующие строки:  
+To install English and Russian localization, you need to uncomment the following lines:  
 `en_US.UTF-8 UTF-8`  
 `ru_RU.UTF-8 UTF-8`  
-`locale-gen` команда для генерации всех раскомментированных ранее локалей  
-Далее, если вам нужна отличающийся от английского язык системы, в `/etc/locale.conf` надо заменить значение LANG на одну из сконфигурированных локалей (далее пример с русской локализацией):  
+`locale-gen` command to generate all previously uncommented locales  
+Further, if you need a system language other than English, in `/etc/locale.conf` you need to replace the LANG value with one of the configured locales (example with Russian localization):  
 `nano /etc/locale.conf`  
 `LANG=ru_RU.UTF-8`  
 
-#### КОНФИГУРАЦИЯ СЕТИ
-Создадите имя вашего компьютера (hostname):  
+#### NETWORK CONFIGURATION
+Create a name for your computer (hostname):  
 `nano /etc/hostname`  
 `myhostname`  
-Отредактируйте `/etc/hosts`  по следующему [шаблону](https://wiki.archlinux.org/title/Installation_guide#Network_configuration):  
+Edit `/etc/hosts` with the following [pattern](https://wiki.archlinux.org/title/Installation_guide#Network_configuration):  
 >127.0.0.1  localhost  
 >::1        localhost  
 >127.0.1.1  myhostname.localdomain  myhostname  
 
-#### ПАРОЛЬ СУПЕРПОЛЬЗОВАТЕЛЯ
-`passwd` установка пароля суперпользователя  
+#### SUPERUSER PASSWORD
+`passwd` setting superuser password  
 
-#### ЗАГРУЗЧИК
-Далее рассмотрен пример установки загрузчика для uefi систем, для установки загрузчика для bios систем уточняйте детали на [Arch Wiki](https://wiki.archlinux.org/title/GRUB)  
-`pacman -S grub efibootmgr` установка grub  
+#### BOOTLOADER
+The following is an example of installing a bootloader for UEFI systems, to install a bootloader for BIOS systems, check the details on the [Arch Wiki](https://wiki.archlinux.org/title/GRUB)  
+`pacman -S grub efibootmgr` grub installation  
 
-Также опционально можно установить микрокод для intel или amd процессоров:  
-`pacman -S amd-ucode`  микрокод для amd процессоров  
-`pacman -S intel-ucode`  микрокод для intel процессоров  
+You can also optionally install microcode for intel or amd processors:  
+`pacman -S amd-ucode`  microcode for amd processors  
+`pacman -S intel-ucode`  microcode for intel processors  
 
-Установка загрузчика для uefi систем с efi разделом на /boot/efi, bootloader-id можно выставить любой - это название вашей системы в выборе вариантов загрузки в биосе  
+Installing a bootloader for uefi systems with an efi partition on /boot/efi, bootloader-id you can put any - this is the name of your system in the choice of boot options in the BIOS  
 `grub-install --target=x86_64-efi --efi-directory=/boot/efi  --bootloader-id=manjaro`  
-`update-grub` генерация конфигурационного файла  
+`update-grub` config file generation  
 
-### УСТАНОВКА ГРАФИЧЕСКОГО ОКРУЖЕНИЯ
-#### СОЗДАНИЕ АДМИНИСТРАТОРА
-`useradd -m username` создание пользователя username  
-`usermod -a -G wheel username` добавление username в группу wheel  
-`passwd username` установка пароля для username  
-`pacman -S sudo` установка sudo и редактора nano (если его не было ранее)  
-`EDITOR=nano visudo` редактирование параметров sudo  
-Далее требуется раскомментировать строку, связанную с группой wheel:  
+### SETTING THE GRAPHIC ENVIRONMENT
+#### CREATING AN ADMINISTRATOR
+`useradd -m username` create user username  
+`usermod -a -G wheel username` adding username to wheel group  
+`passwd username` setting password for username  
+`pacman -S sudo` installing sudo and nano editor (if it was not there before)  
+`EDITOR=nano visudo` editing sudo options  
+Next, you need to uncomment the line associated with the wheel group:  
 `%wheel ALL=(ALL) ALL`  
 
-#### УСТАНОВКА KDE PLASMA
-`pacman -S xorg-server plasma-desktop sddm-kcm` установка xorg-server и минимального набора plasma  
+#### KDE PLASMA INSTALLATION
+`pacman -S xorg-server plasma-desktop sddm-kcm` installing xorg-server and minimal suite of plasma packages  
   
-Для полного набора KDE Plasma, а также ее приложений, на странице установленных пакетов Manjaro KDE (ссылка в TIPS & TRICKS) нужно установить пакеты из пунктов Plasma5 и KDE Applications  
-Если Вас не сильно волнует "засоренность" вашей системы, то можно выполнить следующую команду, которая установит все нужные пакеты для KDE Plasma и KDE Applications:  
+For a complete set of KDE Plasma, as well as its applications, on the Manjaro KDE packages pages page (link in TIPS & TRICKS) you need to install the packages from Plasma5 and KDE applications sections  
+If you are not worried about the "clutter" of your system, then you can run the following command, which will install all the necessary packages for KDE Plasma and KDE Applications:  
 `pacman -S xorg-server plasma-meta kde-applications`  
   
-`systemctl enable sddm.service` включение sddm  
-`systemctl enable NetworkManager.service` включение NetworkManager  
+`systemctl enable sddm.service` enable sddm  
+`systemctl enable NetworkManager.service` enable NetworkManager  
 
-#### УСТАНОВКА GNOME
-`pacman -S xorg-server gnome` установка xorg-server и gnome  
-`systemctl enable gdm.service` включение gdm  
-`systemctl enable NetworkManager.service` включение NetworkManager  
+#### GNOME INSTALLATION
+`pacman -S xorg-server gnome` installing xorg-server and gnome  
+`systemctl enable gdm.service` enable gdm  
+`systemctl enable NetworkManager.service` enable NetworkManager  
 
-### ЗАВЕРШЕНИЕ УСТАНОВКИ
-`exit` выход из chroot  
-`shutdown now` выключение системы  
+### FINISHING INSTALLATION
+`exit` exit chroot  
+`shutdown now` system shutdown 
 
 ### TIPS & TRICKS
-Если вы хотите получить тот же набор установленных программ, как и в обычных образах Manjaro Linux, то не выходя из chroot вы можете пройтись по списку установленных пакетов в [KDE](https://gitlab.manjaro.org/profiles-and-settings/iso-profiles/-/blob/master/manjaro/kde/Packages-Desktop), [GNOME](https://gitlab.manjaro.org/profiles-and-settings/iso-profiles/-/blob/master/manjaro/gnome/Packages-Desktop) и [XFCE](https://gitlab.manjaro.org/profiles-and-settings/iso-profiles/-/blob/master/manjaro/xfce/Packages-Desktop)  
+If you want to get the same set of installed programs as in regular Manjaro Linux images, then without leaving the chroot, you can go through the list of installed packages in [KDE](https://gitlab.manjaro.org/profiles-and-settings/iso-profiles/-/blob/master/manjaro/kde/Packages-Desktop), [GNOME](https://gitlab.manjaro.org/profiles-and-settings/iso-profiles/-/blob/master/manjaro/gnome/Packages-Desktop) and [XFCE](https://gitlab.manjaro.org/profiles-and-settings/iso-profiles/-/blob/master/manjaro/xfce/Packages-Desktop)  
 
-Также на KDE могут возникнуть проблемы при изменении параметров пользователя в настройках  
-Если выдает ошибку при сохранении изменений, то в `/etc/login.defs` требуется изменить поле `CHFN_RESTRICT`, поменяв значение на `frwh`  
+Also on KDE, problems may arise when changing user options in settings  
+If it gives an error while saving changes, then in `/etc/login.defs` you need to change the `CHFN_RESTRICT` field, changing the value to `frwh`  
 
-Если при разметке в качестве файловой системы была выбрана btrfs, то, при надобности, subvolume придется создавать самому, следуя [данной статье](https://wiki.archlinux.org/title/Btrfs#Subvolumes)  
+If btrfs was selected as the file system during the markup, then, if necessary, you will have to create the subvolume yourself, following [this article](https://wiki.archlinux.org/title/Btrfs#Subvolumes)  
 
-Различные детали, связанные с установкой и не только, можно уточнить на [ArchWiki](https://wiki.archlinux.org/)  
+Various installation details and more can be found at [ArchWiki](https://wiki.archlinux.org/)  
   
 ---
 Created by @eightbyte81
